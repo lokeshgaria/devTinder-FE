@@ -138,3 +138,87 @@ textarea::-webkit-scrollbar-thumb:hover {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
+
+/***TOAST NOTIFICATION CSS****/
+/* Notification Toast Styles */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progressBar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 0.3s ease-out;
+}
+
+.animate-slide-in-top {
+  animation: slideInTop 0.3s ease-out;
+}
+
+.animate-progress-bar {
+  animation: progressBar linear forwards;
+}
+
+/* Notification container adjustments */
+.notification-container {
+  pointer-events: none;
+}
+
+.notification-container > * {
+  pointer-events: auto;
+}

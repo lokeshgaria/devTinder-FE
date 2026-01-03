@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { addUser } from "../utils/redux/feature/userSlice";
+import { showSuccess, showError, showInfo, showWarning } from "../utils/notifications";
 import AXIOS_API from "../utils/axios";
  
 
@@ -11,8 +12,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "rahul@gmail.com",
-    password: "Rahul@12345",
+    email: "lokeshgaria8811@gmail.com",
+    password: "Lokesh@12345",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,6 +65,7 @@ setErrors({})
       setErrors({
         apiError: error.message
       })
+      showError(`${error.message}`)
     } finally {
       setIsLoading(false);
     }

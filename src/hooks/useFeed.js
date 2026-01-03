@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AXIOS_API from "../utils/axios";
+import { showError } from "../utils/notifications";
 const useFeed = () => {
   const [feedList, setFeedList] = useState([]);
   const [loading, setLoading] = useState(null);
@@ -14,6 +15,7 @@ const useFeed = () => {
         }
       } catch (error) {
         console.log(error.message);
+        showError(error.message)
       } finally {
         setLoading(false);
       }

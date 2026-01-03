@@ -58,6 +58,8 @@ const ConnectionsPage = () => {
   useEffect(() => {
     if(!loading && connectionList.length>0){
 setFilteredConnections(connectionList)
+    }else{
+      setFilteredConnections([])
     }
   },[loading])
   // Filter connections based on search and filter
@@ -167,7 +169,7 @@ setFilteredConnections(connectionList)
             <div className="flex items-center space-x-2">
               <div className="badge badge-primary badge-lg">
                 <Heart className="w-3 h-3 mr-1" fill="currentColor" />
-                {connections.length} matches
+                {filteredConnections.length} matches
               </div>
             </div>
           </div>

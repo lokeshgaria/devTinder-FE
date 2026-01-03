@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import AXIOS_API from "../utils/axios";
+import { showError } from "../utils/notifications";
 
 const ProfilePage = () => {
   const USER_DETAILS = useSelector((store) => store.user);
@@ -81,6 +82,7 @@ const ProfilePage = () => {
       }
     } catch (error) {
       setError({ apiError: error.message });
+      showError(error.message )
     } finally {
       setLoading(false);
     }

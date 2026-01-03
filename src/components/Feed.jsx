@@ -4,6 +4,7 @@ import {
   X,
   User,
   Flame,
+  CheckCircle,
   Settings,
   Mail,
   MapPin,
@@ -29,6 +30,9 @@ import {
 import "../App.css";
 // import {users} from "../utils/mockData"
 import useFeed from "../hooks/useFeed";
+import AXIOS_API from "../utils/axios";
+import { CONNECTION_REQUESTS } from "../utils/constants";
+import { showError, showSuccess } from "../utils/notifications";
 const App = () => {
   const { feedList: users, loading } = useFeed();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -49,41 +53,57 @@ const App = () => {
   const currentUser = users[currentIndex];
   const nextUser = users[(currentIndex + 1) % users.length];
 
-  
+  console.log("users", { users, currentUser });
+  const handleRequestAction = async (actionPayload) => {
+    const { status, toUserId } = actionPayload;
+    try {
+      const { data } = await AXIOS_API.post(
+        `/request/send/${status}/${toUserId}`
+      );
+      if (data.success) {
+        showSuccess(data.message)
+        if (status === CONNECTION_REQUESTS.INTERESTED) {
+          setIsAnimating(true);
+          setShowLike(true);
+          setSwipeDirection("right");
+        } else {
+          setIsAnimating(true);
+          setShowPass(true);
+          setSwipeDirection("left");
+        }
+
+        //handle the card status
+        setTimeout(() => {
+          setCurrentIndex((prev) => (prev + 1) % users.length);
+          setIsAnimating(false);
+          setShowLike(false);
+          setSwipeDirection(null);
+        }, 500);
+      }
+    } catch (error) {
+      showError(`"ERROR:" ${error.message}`);
+      console.error(("ERROR:", error.message));
+    } finally {
+    }
+  };
   const handleLike = () => {
     if (isAnimating) return;
 
-    setIsAnimating(true);
-    setShowLike(true);
-    setSwipeDirection("right");
-
-    setTimeout(() => {
-      // Random chance of match (30%)
-      if (Math.random() < 0.3) {
-        setMatchName(currentUser.name);
-        setShowMatch(true);
-      }
-
-      setCurrentIndex((prev) => (prev + 1) % users.length);
-      setIsAnimating(false);
-      setShowLike(false);
-      setSwipeDirection(null);
-    }, 500);
+    const PAYLOAD = {
+      status: CONNECTION_REQUESTS.INTERESTED,
+      toUserId: currentUser?._id,
+    };
+    handleRequestAction(PAYLOAD);
   };
 
   const handlePass = () => {
     if (isAnimating) return;
 
-    setIsAnimating(true);
-    setShowPass(true);
-    setSwipeDirection("left");
-
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % users.length);
-      setIsAnimating(false);
-      setShowPass(false);
-      setSwipeDirection(null);
-    }, 500);
+    const PAYLOAD = {
+      status: CONNECTION_REQUESTS.IGNORED,
+      toUserId: currentUser?._id,
+    };
+    handleRequestAction(PAYLOAD);
   };
 
   const handleProfileClick = () => {
@@ -243,21 +263,33 @@ const App = () => {
   };
 
   loading && <p>Loading...</p>;
+
+  if (!currentUser && users.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+        <h3 className="text-xl font-semibold mb-2">All requests processed!</h3>
+        <p className="text-gray-400 p-3">
+          No pending connection requests at the moment.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black text-white overflow-hidden">
       {/* Header */}
       <header className="container mx-auto px-4 py-6 max-w-lg">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-3">
+          {/* <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 flex items-center justify-center">
               <Flame className="w-6 h-6" />
             </div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
               DevMatch
             </h1>
-          </div>
+          </div> */}
 
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <button className="btn btn-ghost btn-circle">
               <Settings className="w-5 h-5 text-gray-400" />
             </button>
@@ -267,7 +299,7 @@ const App = () => {
                 3
               </span>
             </button>
-          </div>
+          </div> */}
         </div>
       </header>
 
@@ -462,13 +494,13 @@ const App = () => {
           </button>
 
           {/* Profile Button */}
-          <button
+          {/* <button
             onClick={handleProfileClick}
             disabled={isAnimating}
             className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all hover:border-blue-500/50 group"
           >
             <User className="w-6 h-6 text-blue-500 group-hover:scale-110 transition-transform" />
-          </button>
+          </button> */}
 
           {/* Like Button */}
           <button
@@ -481,7 +513,7 @@ const App = () => {
         </div>
 
         {/* Additional Actions */}
-        <div className="flex justify-center items-center space-x-6 mb-8">
+        {/* <div className="flex justify-center items-center space-x-6 mb-8">
           <button
             onClick={handleUndo}
             disabled={currentIndex === 0 || isAnimating}
@@ -499,10 +531,10 @@ const App = () => {
           <button className="btn btn-ghost btn-circle hover:bg-gray-800/50">
             <Zap className="w-5 h-5 text-purple-500" />
           </button>
-        </div>
+        </div> */}
 
         {/* Stats Bar */}
-        <div className="flex justify-between items-center text-gray-400 text-sm bg-gray-800/30 backdrop-blur-sm rounded-2xl p-4 border border-gray-700/50">
+        {/* <div className="flex justify-between items-center text-gray-400 text-sm bg-gray-800/30 backdrop-blur-sm rounded-2xl p-4 border border-gray-700/50">
           <div className="flex items-center space-x-3">
             <div className="p-2 rounded-full bg-green-500/20">
               <Heart className="w-4 h-4 text-green-500" fill="currentColor" />
@@ -530,7 +562,7 @@ const App = () => {
               <p className="font-semibold">8</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </main>
 
       {/* Profile Modal */}
@@ -661,7 +693,7 @@ const App = () => {
       )}
 
       {/* Match Modal */}
-      {showMatch && (
+      {/* {showMatch && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-gradient-to-br from-pink-500 via-pink-600 to-orange-500 rounded-3xl max-w-md w-full p-8 text-center shadow-2xl shadow-pink-500/30">
             <div className="animate-pulse">
@@ -697,10 +729,10 @@ const App = () => {
             </p>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Instructions */}
-      <div className="fixed bottom-4 left-4 text-sm text-gray-500 hidden md:block bg-gray-900/50 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-700/50">
+      {/* <div className="fixed bottom-4 left-4 text-sm text-gray-500 hidden md:block bg-gray-900/50 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-700/50">
         <p className="flex items-center space-x-2">
           <span>💡 Use</span>
           <kbd className="px-2 py-1 bg-gray-800 rounded text-xs flex items-center">
@@ -714,7 +746,7 @@ const App = () => {
           <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">Space</kbd>
           <span>for profile</span>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, LogIn, User } from "lucide-react";
 import { useNavigate } from "react-router";
 import AXIOS_API from "../utils/axios";
 import { Link } from "react-router";
+import { showError, showInfo } from "../utils/notifications";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -54,15 +55,16 @@ const Signup = () => {
       setIsLoading(true);
       setErrors({});
       // Simulate API call
-      const { data, status } = await AXIOS_API.post("/signup", formData, {
-        withCredentials: true,
-      });
+      const { data} = await AXIOS_API.post("/signup", formData,);
 
       // Handle login logic here
 
       if (data.success) {
-        alert(data.message);
-        navigate("/login");
+        showInfo(data.message);
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
       }
       // Reset form after successful login
       setFormData({});
@@ -70,6 +72,7 @@ const Signup = () => {
       setErrors({
         apiError: error.message,
       });
+      showError(error.message);
     } finally {
       setIsLoading(false);
     }
