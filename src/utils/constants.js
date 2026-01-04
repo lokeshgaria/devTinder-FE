@@ -1,4 +1,5 @@
-export const BASE_URL=import.meta.env.VITE_API_URL
+
+export const BASE_URL=location.hostname==="localhost" ? import.meta.env.VITE_API_URL : "/api"
 
 //["ignored", "interested"];
 export const CONNECTION_REQUESTS = {
