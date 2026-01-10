@@ -10,6 +10,7 @@ import ProfilePage from "./pages/Profile.jsx";
 import ConnectionsPage from "./pages/Connections.jsx";
 import RequestsPage from "./pages/Requests.jsx";
 import NotificationToast from "./components/ToastNotifications.jsx";
+import Upgradepack from "./pages/Upgradepack.jsx";
 import "./index.css";
 import App from "./App.jsx";
 
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
     path: "/requests",
     element: <RequestsPage />,
   },
+  {
+    path:"/upgrade",
+    element:<Upgradepack />
+  }
 ]);
 
 createRoot(document.getElementById("root")).render(

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, LogIn, User } from "lucide-react";
-
+import Logo from "../components/Logo";
 import { useNavigate } from "react-router";
 import AXIOS_API from "../utils/axios";
 import { Link } from "react-router";
@@ -9,8 +9,8 @@ import { showError, showInfo } from "../utils/notifications";
 const Signup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "rahul@gmail.com",
-    password: "Rahul@12345",
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,9 +70,9 @@ const Signup = () => {
       setFormData({});
     } catch (error) {
       setErrors({
-        apiError: error.message,
+        apiError: error.message || error.error,
       });
-      showError(error.message);
+      showError(error.message || error.error);
     } finally {
       setIsLoading(false);
     }
@@ -101,8 +101,9 @@ const Signup = () => {
           <div className="p-8">
             {/* Header */}
             <div className="text-center mb-10">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <LogIn className="w-8 h-8 text-base-100" />
+              <div className="w-16 h-16   flex items-center justify-center mx-auto    ">
+                {/* <LogIn className="w-8 h-8 text-base-100" /> */}
+                <Logo />
               </div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Welcome
