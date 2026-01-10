@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import { addUser } from "../utils/redux/feature/userSlice";
 import { showSuccess, showError, showInfo, showWarning } from "../utils/notifications";
 import AXIOS_API from "../utils/axios";
- 
+import Logo from "../components/Logo"; 
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -94,8 +94,9 @@ setErrors({})
           <div className="p-8">
             {/* Header */}
             <div className="text-center mb-10">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <LogIn className="w-8 h-8 text-base-100" />
+              <div className="w-16 h-16   flex items-center justify-center mx-auto mb-4  ">
+                {/* <LogIn className="w-8 h-8 text-base-100" /> */}
+                <Logo />
               </div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Welcome Back

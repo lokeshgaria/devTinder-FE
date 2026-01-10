@@ -63,7 +63,7 @@ const ProfilePage = () => {
   const handleSave = async () => {
     try {
       setLoading(true);
-      const { firstName, lastName, age, about, photoUrl, gender, skills } =
+      const { firstName, lastName, age, about, photoUrl, gender, skills ,phone} =
         formData;
       const EDIT_PAYLOAD = {
         firstName,
@@ -73,6 +73,7 @@ const ProfilePage = () => {
         photoUrl,
         gender,
         skills,
+        phone
       };
       const { data } = await AXIOS_API.patch("/profile/edit", EDIT_PAYLOAD);
       if (data.success) {
@@ -334,6 +335,23 @@ const ProfilePage = () => {
                       </>
                     )}
                   </div>
+                  {/* Phone number */}
+                  {isEditing ? (
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="text-2xl font-bold bg-transparent border-b border-gray-600 text-center focus:outline-none focus:border-blue-500 w-full"
+                        placeholder="First Name"
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <h2 className="text-2xl font-bold">{profile.phone}</h2>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
