@@ -222,3 +222,52 @@ textarea::-webkit-scrollbar-thumb:hover {
 .notification-container > * {
   pointer-events: auto;
 }
+
+/*****CHAT MESSAGES CSS*****/
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Smooth transitions */
+.chat-bubble {
+  transition: all 0.3s ease;
+}
+
+/* Emoji picker scrollbar */
+.h-32::-webkit-scrollbar {
+  width: 6px;
+}
+
+.h-32::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* Typing animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1.4s infinite;
+}

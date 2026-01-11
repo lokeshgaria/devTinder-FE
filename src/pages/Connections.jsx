@@ -355,8 +355,12 @@ setFilteredConnections(connectionList)
                     <div className="flex items-center justify-between text-sm text-gray-400 pt-4 border-t border-gray-700/50">
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center">
+                          <button className="btn btn-ghost btn-sm rounded-full" onClick={() => navigate(`/chat/${connection._id}`)}>
                           <MessageCircle className="w-4 h-4 mr-1" />
                           <span>{connection.email}  </span>
+                          </button>
+                        
+                         
                         </div>
                         {/* <div className="flex items-center">
                           <Heart className="w-4 h-4 mr-1" />
