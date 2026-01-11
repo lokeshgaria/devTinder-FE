@@ -13,6 +13,7 @@ import NotificationToast from "./components/ToastNotifications.jsx";
 import Upgradepack from "./pages/Upgradepack.jsx";
 import "./index.css";
 import App from "./App.jsx";
+import ChatMessages from "./pages/ChatMessages.jsx";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path:"/upgrade",
     element:<Upgradepack />
+  },
+  {
+    path: "/chat/:slugId",
+    element: <ChatMessages />,
   }
 ]);
 
