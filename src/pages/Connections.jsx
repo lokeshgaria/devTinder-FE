@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   Check,
   X,
+  User,
   Phone,
   Video,
   Mail,
@@ -237,15 +238,16 @@ setFilteredConnections(connectionList)
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center space-x-4">
                         <div className="relative">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-pink-500/30">
-                            <img
+                          <div className="w-16 h-16 items-center flex justify-center rounded-full overflow-hidden border-2 border-pink-500/30">
+                            {/* <img
                               src={connection.photoUrl}
                               alt={`${connection.firstName} ${connection.lastName}`}
                               className="w-full h-full object-cover"
                               onError={(e) => {
                                 e.target.src = "https://via.placeholder.com/100x100?text=No+Image";
                               }}
-                            />
+                            /> */}
+                            <User />
                           </div>
                           <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-gray-900 ${getStatusColor(connection.status)}`} />
                         </div>

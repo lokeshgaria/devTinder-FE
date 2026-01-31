@@ -77,3 +77,12 @@ export const plans = {
     popular: false,
   },
 };
+
+
+export const API_END_POINTS={
+  USER:"/user",
+  AUTH:"/auth",
+  FEED:"/feed",
+  CONNECTION:"/connections",
+ ORDER:"/orders"
+}

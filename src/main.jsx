@@ -47,7 +47,8 @@ const router = createBrowserRouter([
   {
     path: "/chat/:slugId",
     element: <ChatMessages />,
-  }
+  },
+ 
 ]);
 
 createRoot(document.getElementById("root")).render(

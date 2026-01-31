@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import AXIOS_API from "../utils/axios";
 import { Link } from "react-router";
 import { showError, showInfo } from "../utils/notifications";
+import { API_END_POINTS } from "../utils/constants";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const Signup = () => {
       setIsLoading(true);
       setErrors({});
       // Simulate API call
-      const { data} = await AXIOS_API.post("/signup", formData,);
+      const { data} = await AXIOS_API.post(`${API_END_POINTS.AUTH}/signup`, formData,);
 
       // Handle login logic here
 

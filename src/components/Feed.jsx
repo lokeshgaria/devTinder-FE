@@ -31,7 +31,7 @@ import "../App.css";
 // import {users} from "../utils/mockData"
 import useFeed from "../hooks/useFeed";
 import AXIOS_API from "../utils/axios";
-import { CONNECTION_REQUESTS } from "../utils/constants";
+import { CONNECTION_REQUESTS,API_END_POINTS } from "../utils/constants";
 import { showError, showSuccess } from "../utils/notifications";
 const App = () => {
   const { feedList: users, loading } = useFeed();
@@ -53,12 +53,12 @@ const App = () => {
   const currentUser = users[currentIndex];
   const nextUser = users[(currentIndex + 1) % users.length];
 
-  console.log("users", { users, currentUser });
+  console.log("users", {  users, currentUser });
   const handleRequestAction = async (actionPayload) => {
     const { status, toUserId } = actionPayload;
     try {
       const { data } = await AXIOS_API.post(
-        `/request/send/${status}/${toUserId}`
+        `${API_END_POINTS.CONNECTION}/send/${status}/${toUserId}`
       );
       if (data.success) {
         showSuccess(data.message)
