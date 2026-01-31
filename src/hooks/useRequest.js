@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AXIOS_API from "../utils/axios";
 import { showError, showSuccess } from "../utils/notifications";
-
+import { API_END_POINTS } from "../utils/constants";
 const useRequest = () => {
   const [requestList, setrequestList] = useState([]);
   const [loading, setLoading] = useState(null);
@@ -10,7 +10,7 @@ const useRequest = () => {
     const fetchConnection = async () => {
       try {
         setLoading(true);
-        const { data } = await AXIOS_API.get("/user/requests/received");
+        const { data } = await AXIOS_API.get(`${API_END_POINTS.CONNECTION}/pending`);
         if (data.success) {
           setrequestList(data.data);
         }
@@ -30,9 +30,9 @@ const useRequest = () => {
     const { status, requestId } = actionPayload;
     try {
       setLoading(true);
-
+//connections/review/accepted
       const { data } = await AXIOS_API.post(
-        `/request/review/${status}/${requestId}`
+        `${API_END_POINTS.CONNECTION}/review/${status}/${requestId}`
       );
       if (data.success) {
         showSuccess(data.message);

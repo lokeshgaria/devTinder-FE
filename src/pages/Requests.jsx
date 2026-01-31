@@ -8,6 +8,7 @@ import {
   X,
   UserCheck,
   UserX,
+  User,
   Clock,
   Mail,
   Briefcase,
@@ -163,7 +164,7 @@ const RequestsPage = () => {
                     {/* User Info */}
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="relative">
-                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-500/30">
+                        {/* <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-500/30">
                           <img
                             src={request?.fromUserId?.photoUrl}
                             alt={`${request?.fromUserId?.firstName} ${request?.fromUserId?.lastName}`}
@@ -173,7 +174,18 @@ const RequestsPage = () => {
                                 "https://via.placeholder.com/100x100?text=No+Image";
                             }}
                           />
-                        </div>
+                        </div> */}
+                         <div className="w-16 h-16 items-center flex justify-center rounded-full overflow-hidden border-2 border-pink-500/30">
+                            {/* <img
+                              src={connection.photoUrl}
+                              alt={`${connection.firstName} ${connection.lastName}`}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.target.src = "https://via.placeholder.com/100x100?text=No+Image";
+                              }}
+                            /> */}
+                            <User />
+                          </div>
                         <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center border-2 border-gray-900">
                           <UserPlus className="w-3 h-3" />
                         </div>

@@ -16,6 +16,7 @@ import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import AXIOS_API from "../utils/axios";
 import { showError } from "../utils/notifications";
+import { API_END_POINTS } from "../utils/constants";
 
 const ProfilePage = () => {
   const USER_DETAILS = useSelector((store) => store.user);
@@ -75,7 +76,7 @@ const ProfilePage = () => {
         skills,
         phone
       };
-      const { data } = await AXIOS_API.patch("/profile/edit", EDIT_PAYLOAD);
+      const { data } = await AXIOS_API.patch(`${API_END_POINTS.USER}/profile/edit`, EDIT_PAYLOAD);
       if (data.success) {
         setProfile(formData);
         setIsEditing(false);
@@ -208,7 +209,7 @@ const ProfilePage = () => {
                 <div className="flex flex-col items-center mb-6">
                   <div className="relative mb-4">
                     <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-gray-700">
-                      <img
+                      {/* <img
                         src={isEditing ? formData.photoUrl : profile.photoUrl}
                         alt="Profile"
                         className="w-full h-full object-cover"
@@ -216,7 +217,13 @@ const ProfilePage = () => {
                           e.target.src =
                             "https://via.placeholder.com/200x200?text=No+Image";
                         }}
-                      />
+                      /> */}
+
+                        <img
+                alt="Tailwind CSS Navbar component"
+                  src={isEditing ? formData.photoUrl : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+               
+              />
                     </div>
 
                     {isEditing && !showUrlInput && (

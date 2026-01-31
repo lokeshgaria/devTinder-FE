@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { BASE_URL } from "../utils/constants";
+import { API_END_POINTS } from "../utils/constants";
 import AXIOS_API from "../utils/axios";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/redux/feature/userSlice";
 import Logo from "./Logo";
 import { showError, showSuccess } from "../utils/notifications";
-import { triggerSuccessConfetti } from "../utils/helper";
+ 
 import { Crown, Zap } from "lucide-react";
 
 const Navbar = () => {
@@ -19,7 +19,7 @@ const Navbar = () => {
     const fetchUser = async () => {
       if (!USER_DETAILS?.firstName) {
         try {
-          const { data } = await AXIOS_API.get(`/profile`, {
+          const { data } = await AXIOS_API.get(`${API_END_POINTS.USER}/profile`, {
             withCredentials: true,
           });
 
@@ -43,7 +43,7 @@ const Navbar = () => {
   const HandleLogout = async () => {
     try {
       const { data, status } = await AXIOS_API.post(
-        `/logout`,
+        `${API_END_POINTS.AUTH}/logout`,
         {},
         {
           withCredentials: true,

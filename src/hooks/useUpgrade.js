@@ -1,7 +1,8 @@
 import AXIOS_API from "../utils/axios";
 import { useState } from "react";
 import { showError, showSuccess } from "../utils/notifications";
-import {triggerSuccessConfetti} from "../utils/helper"
+import { triggerSuccessConfetti } from "../utils/helper"
+import { API_END_POINTS } from "../utils/constants";
 const RAZOR_KEY_ID = import.meta.env.VITE_RAZOR_KEY_ID;
 
 const useUpgrade = () => {
@@ -13,7 +14,7 @@ const useUpgrade = () => {
       //const amount = 70000;
 
       // 1. Get Order from Backend
-      const { data } = await AXIOS_API.post("/upgrade-plan", {
+      const { data } = await AXIOS_API.post(`${API_END_POINTS.ORDER}/create-order`, {
         currency: "INR",
         receipt: "receipt#1",
         notes: { plan_name: PLAN },
@@ -41,7 +42,7 @@ const useUpgrade = () => {
             };
 
             const { data } = await AXIOS_API.post(
-              "/verify-payment",
+              `${API_END_POINTS.ORDER}/verify-payment`,
               VERIFY_PAYMENT
             );
 

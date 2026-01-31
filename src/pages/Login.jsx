@@ -7,6 +7,7 @@ import { addUser } from "../utils/redux/feature/userSlice";
 import { showSuccess, showError, showInfo, showWarning } from "../utils/notifications";
 import AXIOS_API from "../utils/axios";
 import Logo from "../components/Logo"; 
+import { API_END_POINTS } from "../utils/constants";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const Login = () => {
       setIsLoading(true);
 setErrors({})
       // Simulate API call
-      const { data, status } = await AXIOS_API.post("/login", formData, {
+      const { data, status } = await AXIOS_API.post(`${API_END_POINTS.AUTH}/login`, formData, {
         withCredentials: true,
       });
 

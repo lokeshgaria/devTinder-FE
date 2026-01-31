@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AXIOS_API from "../utils/axios";
 import { showError } from "../utils/notifications";
+import { API_END_POINTS } from "../utils/constants";
 
 const useConnections = () => {
   const [connectionList, setConnectionList] = useState([]);
@@ -10,7 +11,7 @@ const useConnections = () => {
     const fetchFeed = async () => {
       try {
         setLoading(true);
-        const { data } = await AXIOS_API.get("/user/connections");
+        const { data } = await AXIOS_API.get(`${API_END_POINTS.CONNECTION}/accepted`);
         if (data.success) {
           setConnectionList(data.data);
         }
