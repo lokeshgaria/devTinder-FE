@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   User,
   Edit2,
@@ -9,26 +9,26 @@ import {
   Music,
   ChevronLeft,
   Plus,
-  Link,
+  Upload,
+  Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router";
 import Navbar from "../components/Navbar";
 import { useSelector } from "react-redux";
 import AXIOS_API from "../utils/axios";
-import { showError } from "../utils/notifications";
+import { showError, showSuccess } from "../utils/notifications";
 import { API_END_POINTS } from "../utils/constants";
 
 const ProfilePage = () => {
   const USER_DETAILS = useSelector((store) => store.user);
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState({});
-  const [showUrlInput, setShowUrlInput] = useState(false);
+  const fileInputRef = useRef(null);
 
- 
-
-  // Initial profile data with only the specified fields
+  // Initial profile data
   const [profile, setProfile] = useState({
     photoUrl: USER_DETAILS?.photoUrl,
     about: USER_DETAILS?.about,
@@ -40,10 +40,10 @@ const ProfilePage = () => {
   });
 
   const [formData, setFormData] = useState({ ...profile });
-  const [newSkill, setNewSkill] = useState("");
-  const [tempPhotoUrl, setTempPhotoUrl] = useState("");
 
- 
+  console.log('formdata',formData)
+  const [newSkill, setNewSkill] = useState("");
+  const [imagePreview, setImagePreview] = useState(USER_DETAILS?.photoUrl || "");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -57,15 +57,112 @@ const ProfilePage = () => {
     if (Object.keys(USER_DETAILS).length > 2) {
       setFormData({ ...USER_DETAILS });
       setProfile({ ...USER_DETAILS });
-      setTempPhotoUrl(USER_DETAILS?.photoUrl || "");
+      setImagePreview(USER_DETAILS?.photoUrl || "");
     }
   }, [USER_DETAILS]);
+
+  // Handle file selection
+  const handleFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Handle image upload
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      showError('Please select a valid image file (JPEG, PNG, GIF, WebP)');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      showError('Image size should be less than 5MB');
+      return;
+    }
+
+    // Create preview
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+
+    // Upload to server
+    try {
+      setUploadingImage(true);
+      const formData = new FormData();
+      formData.append('photo', file);
+     
+//api/v2/upload/profile-photo
+      const { data } = await AXIOS_API.post(
+        `/upload/profile-photo`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      console.log('data__',data)
+      if (data.success) {
+        
+        alert('profle',data)
+        setFormData(prev => ({
+          ...prev,
+          photoUrl: data.data.photoUrl,
+          thumbnailUrl:data.data.thumbnailUrl
+        }));
+        showSuccess('Profile image uploaded successfully!');
+      }
+    } catch (error) {
+      showError(error.message || 'Failed to upload image');
+      // Revert to previous image on error
+      setImagePreview(formData.photoUrl || "");
+    } finally {
+      setUploadingImage(false);
+      // Clear file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+
+  console.log('formData',formData)
+
+  // Remove profile image
+  const handleRemoveImage = async () => {
+    try {
+      setUploadingImage(true);
+      const { data } = await AXIOS_API.delete(
+        `${API_END_POINTS.USER}/remove-profile-image`,
+        {
+          data: { userId: USER_DETAILS?._id }
+        }
+      );
+
+      if (data.success) {
+        setFormData(prev => ({
+          ...prev,
+          photoUrl: ''
+        }));
+        setImagePreview('');
+        showSuccess('Profile image removed successfully!');
+      }
+    } catch (error) {
+      showError(error.message || 'Failed to remove image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const handleSave = async () => {
     try {
       setLoading(true);
-      const { firstName, lastName, age, about, photoUrl, gender, skills ,phone} =
-        formData;
+      const { firstName, lastName, age, about, photoUrl, gender, skills, phone ,thumbnailUrl } = formData;
+      
       const EDIT_PAYLOAD = {
         firstName,
         lastName,
@@ -74,17 +171,18 @@ const ProfilePage = () => {
         photoUrl,
         gender,
         skills,
-        phone
+        phone,thumbnailUrl
       };
+      
       const { data } = await AXIOS_API.patch(`${API_END_POINTS.USER}/profile/edit`, EDIT_PAYLOAD);
       if (data.success) {
         setProfile(formData);
         setIsEditing(false);
-        setShowUrlInput(false);
+        showSuccess('Profile updated successfully!');
       }
     } catch (error) {
       setError({ apiError: error.message });
-      showError(error.message )
+      showError(error.message);
     } finally {
       setLoading(false);
     }
@@ -93,29 +191,7 @@ const ProfilePage = () => {
   const handleCancel = () => {
     setFormData({ ...profile });
     setIsEditing(false);
-    setShowUrlInput(false);
-    setTempPhotoUrl(profile.photoUrl || "");
-  };
-
-  const handlePhotoUrlChange = (e) => {
-    const value = e.target.value;
-    setTempPhotoUrl(value);
-    // Update formData only when we confirm
-  };
-
-  const handleApplyPhotoUrl = () => {
-    if (tempPhotoUrl.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        photoUrl: tempPhotoUrl.trim(),
-      }));
-      setShowUrlInput(false);
-    }
-  };
-
-  const handleCancelPhotoUrl = () => {
-    setTempPhotoUrl(formData.photoUrl || "");
-    setShowUrlInput(false);
+    setImagePreview(profile.photoUrl || "");
   };
 
   const handleAddSkill = () => {
@@ -208,57 +284,83 @@ const ProfilePage = () => {
                 {/* Profile Picture */}
                 <div className="flex flex-col items-center mb-6">
                   <div className="relative mb-4">
-                    <div className="w-48 h-48 rounded-full overflow-hidden border-4 border-gray-700">
-                      {/* <img
-                        src={isEditing ? formData.photoUrl : profile.photoUrl}
+                    <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-gray-700 group">
+                      <img
+                        src={imagePreview || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
                         alt="Profile"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         onError={(e) => {
-                          e.target.src =
-                            "https://via.placeholder.com/200x200?text=No+Image";
+                          e.target.src = "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
                         }}
-                      /> */}
-
-                        <img
-                alt="Tailwind CSS Navbar component"
-                  src={isEditing ? formData.photoUrl : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
-               
-              />
+                      />
+                      
+                      {/* Image overlay with actions in edit mode */}
+                      {isEditing && (
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="flex flex-col items-center space-y-2">
+                            <button
+                              onClick={handleFileSelect}
+                              disabled={uploadingImage}
+                              className="btn btn-primary btn-sm rounded-full"
+                            >
+                              {uploadingImage ? (
+                                <span className="loading loading-spinner loading-sm"></span>
+                              ) : (
+                                <>
+                                  <Upload className="w-4 h-4 mr-2" />
+                                  Upload
+                                </>
+                              )}
+                            </button>
+                            
+                            {imagePreview && (
+                              <button
+                                onClick={handleRemoveImage}
+                                className="btn btn-error btn-sm rounded-full"
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {isEditing && !showUrlInput && (
-                      <button
-                        onClick={() => setShowUrlInput(true)}
-                        className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full p-3 cursor-pointer hover:scale-105 transition-transform shadow-lg"
-                      >
-                        <Link className="w-5 h-5" />
-                      </button>
+                    {/* Hidden file input */}
+                    {isEditing && (
+                      <>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageUpload}
+                          disabled={uploadingImage}
+                        />
+                        
+                        {/* Upload instruction */}
+                        <div className="text-center mt-2">
+                          <p className="text-xs text-gray-400">
+                            Max size: 5MB • Formats: JPG, PNG, GIF, WebP
+                          </p>
+                        </div>
+                      </>
                     )}
 
-                    {isEditing && showUrlInput && (
-                      <div className="absolute bottom-4 left-0 right-0 bg-gray-800/90 backdrop-blur-sm p-3 rounded-lg mx-4">
-                        <input
-                          type="text"
-                          value={tempPhotoUrl}
-                          onChange={handlePhotoUrlChange}
-                          placeholder="Enter image URL..."
-                          className="input input-bordered w-full bg-gray-700 border-gray-600 mb-2"
-                        />
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={handleApplyPhotoUrl}
-                            className="btn btn-success btn-xs flex-1"
-                          >
-                            Apply
-                          </button>
-                          <button
-                            onClick={handleCancelPhotoUrl}
-                            className="btn btn-ghost btn-xs"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
+                    {/* Edit mode camera icon */}
+                    {isEditing && !imagePreview && (
+                      <button
+                        onClick={handleFileSelect}
+                        disabled={uploadingImage}
+                        className="absolute bottom-4 right-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full p-3 cursor-pointer hover:scale-105 transition-transform shadow-lg"
+                      >
+                        {uploadingImage ? (
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <Camera className="w-5 h-5" />
+                        )}
+                      </button>
                     )}
                   </div>
 
@@ -302,6 +404,8 @@ const ProfilePage = () => {
                             value={formData.age}
                             onChange={handleInputChange}
                             className="text-lg font-medium bg-transparent border-b border-gray-600 text-center focus:outline-none focus:border-blue-500 w-16"
+                            min="1"
+                            max="120"
                           />
                         </div>
 
@@ -315,6 +419,7 @@ const ProfilePage = () => {
                             onChange={handleInputChange}
                             className="text-lg text-gray-400 font-medium bg-transparent border-b border-gray-600 text-center focus:outline-none focus:border-blue-500"
                           >
+                            <option value="">Select Gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Other</option>
@@ -329,36 +434,38 @@ const ProfilePage = () => {
                         <div className="text-center">
                           <div className="text-sm text-gray-400">Age</div>
                           <div className="text-lg font-medium">
-                            {profile.age}
+                            {profile.age || 'Not set'}
                           </div>
                         </div>
 
                         <div className="text-center">
                           <div className="text-sm text-gray-400">Gender</div>
                           <div className="text-lg font-medium capitalize">
-                            {profile.gender}
+                            {profile.gender || 'Not set'}
                           </div>
                         </div>
                       </>
                     )}
                   </div>
+                  
                   {/* Phone number */}
-                  {isEditing ? (
-                    <div className="space-y-3">
+                  <div className="text-center">
+                    <div className="text-sm text-gray-400 mb-1">Phone</div>
+                    {isEditing ? (
                       <input
-                        type="text"
+                        type="tel"
                         name="phone"
-                        value={formData.phone}
+                        value={formData.phone || ''}
                         onChange={handleInputChange}
-                        className="text-2xl font-bold bg-transparent border-b border-gray-600 text-center focus:outline-none focus:border-blue-500 w-full"
-                        placeholder="First Name"
+                        className="text-lg font-medium bg-transparent border-b border-gray-600 text-center focus:outline-none focus:border-blue-500 w-full"
+                        placeholder="Phone number"
                       />
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <h2 className="text-2xl font-bold">{profile.phone}</h2>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="text-lg font-medium">
+                        {profile.phone || 'Not set'}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -375,7 +482,7 @@ const ProfilePage = () => {
                 {isEditing ? (
                   <textarea
                     name="about"
-                    value={formData.about}
+                    value={formData.about || ''}
                     onChange={handleInputChange}
                     rows="6"
                     className="textarea textarea-bordered w-full bg-gray-800/30 border-gray-600 focus:border-blue-500 resize-none"
@@ -383,7 +490,7 @@ const ProfilePage = () => {
                   />
                 ) : (
                   <p className="text-gray-300 leading-relaxed whitespace-pre-line">
-                    {profile.about}
+                    {profile.about || 'No about information provided.'}
                   </p>
                 )}
               </div>
