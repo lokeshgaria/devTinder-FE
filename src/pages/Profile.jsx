@@ -108,7 +108,7 @@ const ProfilePage = () => {
       console.log('data__',data)
       if (data.success) {
         
-        alert('profle',data)
+       
         setFormData(prev => ({
           ...prev,
           photoUrl: data.data.photoUrl,
