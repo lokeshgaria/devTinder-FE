@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 export const createSocketConnection = () =>{
 
     if(location.hostname==="localhost"){
-        const socket = io(import.meta.env.VITE_API_URL);
+        const socket = io("http://localhost:8080");
         return socket;
     }
    else{
