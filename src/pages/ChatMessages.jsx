@@ -50,7 +50,7 @@ console.log('loading',loading)
       
       try {
         setLoading(true);
-        const { data } = await AXIOS_API.get(`/chat/${slugId}`);
+        const { data } = await AXIOS_API.get(`/chats/${slugId}`);
         
         console.log("Chat API response:", data);
         
