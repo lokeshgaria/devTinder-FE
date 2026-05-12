@@ -13,7 +13,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "lokesh@gmail.com",
+    email: "lokeshgaria8811@gmail.com",
     password: "Lokesh@12345",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -62,11 +62,9 @@ setErrors({})
       // Reset form after successful login
       setFormData({ email: "", password: "" });
     } catch (error) {
-      console.log("Login attempt with:", error.message);
-      setErrors({
-        apiError: error.message
-      })
-      showError(`${error.message}`)
+      console.log("Login attempt with:", error.error.message);
+     
+      showError(`${error.error.message}`)
     } finally {
       setIsLoading(false);
     }
