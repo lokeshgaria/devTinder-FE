@@ -22,8 +22,7 @@ const useUpgrade = () => {
 
       // Based on your code, data is likely response.data
       const order = data.order;
-
-      console.log("order__", order, data);
+ 
 
       // 2. Configuration for the UI Checkout
       const options = {
