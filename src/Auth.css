@@ -1,0 +1,565 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+ 
+
+/* ─── Keyframes ─────────────────────────────────────────── */
+
+@keyframes floatA {
+  0%, 100% { transform: translate(calc(-50% + var(--px, 0px) * 1.8), calc(-50% + var(--py, 0px) * 1.8)) translateY(0px) rotate(0deg); }
+  33%       { transform: translate(calc(-50% + var(--px, 0px) * 1.8), calc(-50% + var(--py, 0px) * 1.8)) translateY(-18px) rotate(6deg); }
+  66%       { transform: translate(calc(-50% + var(--px, 0px) * 1.8), calc(-50% + var(--py, 0px) * 1.8)) translateY(-8px) rotate(-4deg); }
+}
+
+@keyframes floatB {
+  0%, 100% { transform: translate(calc(-50% + var(--px, 0px) * -1.2), calc(-50% + var(--py, 0px) * -1.4)) translateY(0px) rotate(0deg); }
+  40%       { transform: translate(calc(-50% + var(--px, 0px) * -1.2), calc(-50% + var(--py, 0px) * -1.4)) translateY(-14px) rotate(-8deg); }
+  70%       { transform: translate(calc(-50% + var(--px, 0px) * -1.2), calc(-50% + var(--py, 0px) * -1.4)) translateY(-22px) rotate(3deg); }
+}
+
+@keyframes floatC {
+  0%, 100% { transform: translate(calc(-50% + var(--px, 0px) * 2.2), calc(-50% + var(--py, 0px) * 1)) translateY(0px) rotate(0deg); }
+  50%       { transform: translate(calc(-50% + var(--px, 0px) * 2.2), calc(-50% + var(--py, 0px) * 1)) translateY(-20px) rotate(12deg); }
+}
+
+@keyframes floatScribble {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes scribbleSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes badgeFloat1 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes badgeFloat2 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes spinBtn {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--px, 0px) * 0.3), calc(-46% + var(--py, 0px) * 0.2)) scale(0.96);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--px, 0px) * 0.3), calc(-50% + var(--py, 0px) * 0.2)) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ─── Base ───────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ─── Root ───────────────────────────────────────────────── */
+
+.auth-root {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center 20%;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Floating objects ───────────────────────────────────── */
+
+.float-obj {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 2;
+}
+
+.float-obj-heart1 {
+  top: 12%; left: 10%;
+  animation: floatA 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+.float-obj-heart2 {
+  bottom: 18%; right: 12%;
+  animation: floatB 10s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+.float-obj-spark {
+  top: 68%; left: 8%;
+  animation: floatC 7s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+/* ─── Scribble ring ──────────────────────────────────────── */
+
+.scribble-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  top: 28%; right: 14%;
+  pointer-events: none;
+  will-change: transform;
+  animation: floatScribble 9s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  z-index: 2;
+}
+
+.scribble-svg {
+  animation: scribbleSpin 28s linear infinite;
+  transform-origin: 60px 60px;
+}
+
+.scribble-path {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 0;
+}
+
+/* ─── Card (iOS Glass Style) ────────────────────────────── */
+
+.auth-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(520px, 94vw);
+  display: flex;
+  border-radius: 32px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(60px) saturate(180%);
+  -webkit-backdrop-filter: blur(60px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  will-change: transform, opacity, filter;
+  opacity: 0;
+  transform: translate(calc(-50% + var(--px, 0px) * 0.3), calc(-46% + var(--py, 0px) * 0.2)) scale(0.96);
+  filter: blur(6px);
+  transition:
+    box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 10;
+}
+
+.auth-card--visible {
+  animation: card-in 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.auth-card:hover {
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ─── Form panel ─────────────────────────────────────────── */
+
+.auth-form-panel {
+  flex: 1;
+  min-width: 0;
+  padding:  1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ─── Staggered hero elements ────────────────────────────── */
+
+.hero-el {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(3px);
+  transition:
+    opacity 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-el--visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* ─── Logo ───────────────────────────────────────────────── */
+
+.hero-logo { display: flex; align-items: center; gap: 11px; }
+
+.logo-mark {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f6f2f2 0%, #cf97b8 100%);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-size: 24px; font-weight: 700;
+  color: #fff; letter-spacing: -0.6px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Headlines ──────────────────────────────────────────── */
+
+.form-headline {
+  margin: 0 0 4px;
+  font-size: 1.2rem; font-weight: 500;
+  color: #fff; letter-spacing: -0.6px; line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-subheadline {
+  margin: 0;
+  font-size: .9rem; color: rgba(255, 255, 255, 0.8);
+  font-weight: 400; line-height: 1.5;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* ─── Tab switcher (iOS Glass) ──────────────────────────── */
+
+.tab-switcher {
+  display: flex;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 11px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13.5px; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+  transition:
+    background 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tab-btn--active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.tab-btn:not(.tab-btn--active):hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Form ───────────────────────────────────────────────── */
+
+.auth-form { display: flex; flex-direction: column; gap: 7px; }
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 10.5px; font-weight: 600;
+  color: rgba(255, 255, 255, 0.8); letter-spacing: 0.3px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── iOS Glass Input Fields ────────────────────────────── */
+
+.field-input {
+  width: 100%;
+  padding: 10px 11px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 11px; font-family: inherit;
+  outline: none;
+  transition:
+    border-color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    background 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.field-input::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+.field-input:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.field-input--password { padding-right: 42px; }
+
+.password-wrap { position: relative; }
+
+.eye-toggle {
+  position: absolute; right: 13px; top: 50%;
+  transform: translateY(-50%);
+  background: transparent; border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer; padding: 2px;
+  display: flex; align-items: center;
+  transition: color 0.2s ease;
+}
+
+.eye-toggle:hover { color: rgba(255, 255, 255, 0.95); }
+
+/* ─── Helper row ─────────────────────────────────────────── */
+
+.form-row-helper {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-top:0;
+}
+
+.remember-label {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; color: rgba(255, 255, 255, 0.7);
+  cursor: pointer; user-select: none;
+}
+
+.remember-check { accent-color: rgba(59, 130, 246, 0.8); width: 13px; height: 13px; }
+
+.forgot-link {
+  font-size: 12.5px; color: rgba(255, 255, 255, 0.9);
+  background: transparent; border: none;
+  cursor: pointer; font-family: inherit; padding: 0;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.forgot-link:hover { color: #fff; }
+
+/* ─── Feedback ───────────────────────────────────────────── */
+
+.form-error {
+  font-size: 13px; color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 12px; padding: 10px 13px; margin: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.1);
+}
+.text-error{
+    font-size: 10px; color: #141313;
+ 
+}
+
+.form-success {
+  font-size: 13px; color: #51cf66;
+  background: rgba(81, 207, 102, 0.15);
+  border: 1px solid rgba(81, 207, 102, 0.3);
+  border-radius: 12px; padding: 10px 13px; margin: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.1);
+} 
+
+.form-info{
+      font-size: 13px; color: #64a3e5;
+  background: rgba(81, 129, 207, 0.15);
+  border: 1px solid rgba(81, 152, 207, 0.3);
+  border-radius: 12px; padding: 10px 13px; margin: 0;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Submit button (iOS Glass) ──────────────────────────– */
+
+.submit-btn {
+  display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+  width: 100%; padding: 10px 0;
+  border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(59, 130, 246, 0.5));
+  color: #fff;
+  font-size: 14px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  letter-spacing: 0.2px;
+  box-shadow:
+    0 8px 24px rgba(59, 130, 246, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative; overflow: hidden;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.submit-btn:hover::before {
+  opacity: 1;
+  animation: shimmer 1.2s ease infinite;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(59, 130, 246, 0.65));
+  box-shadow:
+    0 12px 32px rgba(59, 130, 246, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 4px 16px rgba(59, 130, 246, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.btn-arrow {
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.submit-btn:hover .btn-arrow { transform: translateX(3px); }
+
+.btn-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spinBtn 0.7s linear infinite;
+  display: inline-block;
+}
+
+/* ─── Divider ────────────────────────────────────────────── */
+
+.divider-row { display: flex; align-items: center; gap: 10px; }
+
+.divider-line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.15); }
+
+.divider-text {
+  font-size: 12px; color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap; letter-spacing: 0.2px;
+}
+
+/* ─── Social (iOS Glass) ────────────────────────────────── */
+
+.social-row { display: flex; gap: 10px; }
+
+.social-btn {
+  flex: 1;
+  display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+  padding: 11px 0;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 13.5px; font-weight: 500;
+  font-family: inherit; cursor: pointer;
+  transition:
+    background 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.social-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.social-btn:active { transform: translateY(0); }
+
+/* ─── Footer ─────────────────────────────────────────────── */
+
+.footer-note {
+  font-size: 11px; color: rgba(255, 255, 255, 0.75);
+  margin: 0; text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.switch-link {
+  background: transparent; border: none;
+  color: rgba(255, 255, 255, 0.95); font-family: inherit;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; padding: 0;
+  transition: color 0.2s ease;
+}
+
+.switch-link:hover { color: #fff; }
+
+/* ─── Responsive ─────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .auth-form-panel { padding: 40px 32px; }
+  .auth-card { width: 94vw; }
+  body { overflow: auto; }
+  .auth-root { overflow: auto; position: relative; min-height: 100vh; }
+}
