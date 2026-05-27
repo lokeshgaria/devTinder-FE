@@ -36,13 +36,13 @@ const NotificationToast = () => {
   const getBgColor = (type) => {
     switch (type) {
       case "success":
-        return "bg-gradient-to-r from-green-600 to-emerald-700";
+        return "bg-gradient-to-r from-green-600 to-emerald-700 form-success";
       case "error":
-        return "bg-gradient-to-r from-red-600 to-rose-700";
+        return "bg-gradient-to-r from-red-600 to-rose-700 form-error";
       case "warning":
         return "bg-gradient-to-r from-yellow-600 to-amber-700";
       case "info":
-        return "bg-gradient-to-r from-blue-600 to-indigo-700";
+        return "bg-gradient-to-r from-blue-600 to-indigo-700 form-info";
       case "loading":
         return "bg-gradient-to-r from-purple-600 to-violet-700";
       default:
@@ -95,7 +95,7 @@ const NotificationToast = () => {
                   notification.type
                 )} rounded-2xl shadow-2xl transform transition-all duration-300 animate-slideIn`}
               >
-                <div className="p-4">
+                <div className="p-0">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3">
                       <div className="mt-0.5">
