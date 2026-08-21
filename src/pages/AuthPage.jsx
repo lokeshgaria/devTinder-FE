@@ -15,8 +15,8 @@ export default function AuthPage() {
   const [mode, setMode] = useState("login");
 
   const INITIAL_STATE = {
-    email: "",
-    password: "",
+    email: "lokesh@gmail.com",
+    password: "Lokesh@12345",
     name: "",
     lastName: "",
   };
